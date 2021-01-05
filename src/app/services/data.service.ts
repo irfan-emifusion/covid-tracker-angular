@@ -31,10 +31,8 @@ export class DataService {
       .pipe(
         map((res) => {
           let data = JSON.parse(this.csvJSON(res));
-          let results: any = [];
           let temp: any = {};
           let raw: any = {};
-          let covid: any = {};
           data.forEach((row: any) => {
             temp = {
               active: parseInt(row.Active),
@@ -54,23 +52,13 @@ export class DataService {
             }
             raw[temp.country] = temp;
           });
-          console.log(raw);
-          // for (let i of data) {
-          //
-          //   for (let j of data) {
-          //     if (temp.country === j.Country_Region) {
-          //       temp = {
-          //         active: parseInt(temp.active) + parseInt(j.Active),
-          //         confirmed: parseInt(temp.confirmed) + parseInt(j.Confirmed),
-          //         recovered: parseInt(temp.recovered) + parseInt(j.Recovered),
-          //         deaths: parseInt(temp.deaths) + parseInt(j.Deaths),
-          //       };
-          //     }
-          //   }
-          //   raw[temp.country] = temp;
-          //   results.push(raw);
-          // }
-          return results;
+          raw = Object.values(raw);
+          raw = raw.filter((arr: any) => arr);
+          raw = raw.filter(
+            (arr: any) => !Number.isNaN(arr.confirmed) && arr.active >= 0
+          );
+
+          return raw;
         })
       );
   }
